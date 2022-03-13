@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-
 import { DatabaseModule } from './database.module'
 import { UsersModule } from './modules/users/users.module'
 import { configuration } from './config/configuration'
 import { AuthenticationModule } from './modules/authentication/authentication.module'
-import { EmailConfirmationModule } from './modules/email-confirmation/email-confirmation.module'
-import { EmailModule } from './modules/mailer/email.module'
 
 @Module({
   imports: [
@@ -20,8 +17,6 @@ import { EmailModule } from './modules/mailer/email.module'
     DatabaseModule,
     UsersModule,
     AuthenticationModule,
-    EmailConfirmationModule,
-    EmailModule,
   ],
   controllers: [],
   providers: [],

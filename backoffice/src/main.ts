@@ -1,12 +1,34 @@
 import { NestFactory } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { ConfigService } from '@nestjs/config'
-
+import { BadRequestException, ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { setupSwagger } from 'viveo-swagger'
+import { TransformInterceptor } from './interceptors'
+import { HttpExceptionFilter } from './filters'
+import { errorParser, ResponseErrorTypeEnum } from './common'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
+
+  const transformInterceptor = new TransformInterceptor()
+
+  const httpExceptionFilter = new HttpExceptionFilter()
+
+  const validationPipe = new ValidationPipe({
+    exceptionFactory: errors =>
+      new BadRequestException({
+        type: ResponseErrorTypeEnum.SCHEMA_VALIDATION_ERROR,
+        errors: errorParser(errors),
+      }),
+    forbidNonWhitelisted: true,
+    forbidUnknownValues: true,
+    whitelist: true,
+    transform: true,
+    transformOptions: {
+      enableImplicitConversion: true,
+    },
+  })
 
   const configService: ConfigService = app.get(ConfigService)
 
@@ -15,6 +37,11 @@ async function bootstrap() {
   }
 
   const port = configService.get<number>('port')
+
+  app
+    .useGlobalPipes(validationPipe)
+    .useGlobalFilters(httpExceptionFilter)
+    .useGlobalInterceptors(transformInterceptor)
 
   await app.listen(port)
 }
