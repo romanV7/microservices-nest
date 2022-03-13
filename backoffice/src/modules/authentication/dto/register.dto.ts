@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional, IsString } from 'class-validator'
-import { RoleType } from '../../../common/constants/role-type'
+import { RoleType } from '../../../common'
 
 export class RegisterDto {
   @IsString()

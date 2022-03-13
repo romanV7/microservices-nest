@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common'
-import { AuthenticationService } from './authentication.service'
-import { UsersModule } from '../users/users.module'
-import { AuthenticationController } from './authentication.controller'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
-import { JwtStrategy } from './strategy/jwt.strategy'
+import { AuthenticationController } from './authentication.controller'
+import { UsersModule } from '../users/users.module'
+import { JwtStrategy } from './strategy'
 import { RedisCacheModule } from '../redis/redis-cache.module'
-import { EmailConfirmationModule } from '../email-confirmation/email-confirmation.module'
+import { EmailService } from '../../providers'
+import {
+  ResetPasswordConfirmationService,
+  EmailConfirmationService,
+  AuthenticationService,
+} from './services'
 
 @Module({
   imports: [
@@ -23,9 +27,14 @@ import { EmailConfirmationModule } from '../email-confirmation/email-confirmatio
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     RedisCacheModule,
-    EmailConfirmationModule,
   ],
-  providers: [AuthenticationService, JwtStrategy],
+  providers: [
+    AuthenticationService,
+    JwtStrategy,
+    EmailService,
+    EmailConfirmationService,
+    ResetPasswordConfirmationService,
+  ],
   controllers: [AuthenticationController],
   exports: [PassportModule, JwtStrategy],
 })

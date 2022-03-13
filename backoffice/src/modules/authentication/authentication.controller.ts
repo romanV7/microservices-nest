@@ -5,27 +5,41 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
-
-import { AuthenticationService } from './authentication.service'
-import { RegisterDto } from './dto/register.dto'
-import { UserLoginDto } from './dto/user-login.dto'
-import { LoginResponse } from './dto/response-login.dto'
-import { UserLogoutDto } from './dto/user-logout.dto'
-import { SuccessResponse } from '../../common/dto/success-response.dto'
-import JwtAuthenticationGuard from './guard/jwt-authentication.guard'
-import { User } from '../../decorators/user.decorator'
+import {
+  ConfirmEmailDto,
+  ConfirmResetPasswordDto,
+  LoginResponse,
+  RegisterDto,
+  ResetPasswordDto,
+  UserLoginDto,
+  UserLogoutDto,
+} from './dto'
+import {
+  SuccessResponse,
+  messages,
+  createError,
+  ErrorTypeEnum,
+} from '../../common'
+import { JwtAuthenticationGuard } from './guard'
+import { User } from '../../decorators'
 import { UserEntity } from '../users/user.entity'
-import { EmailConfirmationService } from '../email-confirmation/email-confirmation.service'
+import { UserDto } from '../users/dto'
+import {
+  ResetPasswordConfirmationService,
+  EmailConfirmationService,
+  AuthenticationService,
+} from './services'
 
-@Controller('authentication')
+@Controller('auth')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
     private readonly emailConfirmationService: EmailConfirmationService,
+    private readonly resetPasswordConfirmationService: ResetPasswordConfirmationService,
   ) {}
 
   @Post('register')
-  async register(@Body() registrationData: RegisterDto) {
+  async register(@Body() registrationData: RegisterDto): Promise<UserDto> {
     const user = await this.authenticationService.register(registrationData)
     await this.emailConfirmationService.sendVerificationCode(
       registrationData.email,
@@ -40,7 +54,10 @@ export class AuthenticationController {
     )
     if (!loginResults) {
       throw new UnauthorizedException(
-        'This email, password combination was not found',
+        createError(
+          ErrorTypeEnum.INVALID_CREDENTIALS,
+          messages.errors.invalidCredentialsCombination,
+        ),
       )
     }
 
@@ -56,5 +73,39 @@ export class AuthenticationController {
     await this.authenticationService.logout(user.id, userLogoutDto.token)
 
     return { message: 'ok' }
+  }
+
+  @Post('/register/confirm')
+  async confirmRegistration(
+    @Body() confirmationData: ConfirmEmailDto,
+  ): Promise<void> {
+    await this.emailConfirmationService.checkVerificationCode(confirmationData)
+    await this.emailConfirmationService.confirmEmail(confirmationData.email)
+  }
+
+  @Post('/password/reset')
+  async resetPassword(
+    @Body() resetPasswordData: ResetPasswordDto,
+  ): Promise<void> {
+    const token = await this.resetPasswordConfirmationService.setResetPassword(
+      resetPasswordData.email,
+    )
+    await this.resetPasswordConfirmationService.sendVerificationCode(
+      resetPasswordData.email,
+      token,
+    )
+  }
+
+  @Post('/password/reset/confirm')
+  async confirmPasswordReset(
+    @Body() confirmationData: ConfirmResetPasswordDto,
+  ): Promise<void> {
+    const user = await this.resetPasswordConfirmationService.checkVerificationCode(
+      confirmationData,
+    )
+    await this.resetPasswordConfirmationService.confirmResetPassword(
+      user.email,
+      confirmationData.password,
+    )
   }
 }
