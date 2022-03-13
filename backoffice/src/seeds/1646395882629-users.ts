@@ -1,5 +1,4 @@
-import { RoleType } from '../common/constants/role-type'
-import { StatusType } from '../common/constants/status-type'
+import { RoleType, StatusType } from '../common'
 import { UserEntity } from '../modules/users/user.entity'
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
@@ -10,9 +9,8 @@ const users: Partial<UserEntity>[] = [
     enabled: true,
     status: StatusType.UnConfirmed,
     email: 'unconfirmed@user.com',
-    emailVerified: true,
     password: 'password',
-    role: RoleType.User,
+    role: RoleType.Streamer,
     resetPasswordToken: 'resetPasswordToken',
   },
   {
@@ -21,9 +19,8 @@ const users: Partial<UserEntity>[] = [
     enabled: true,
     status: StatusType.Confirmed,
     email: 'confirmed@user.com',
-    emailVerified: true,
     password: 'password',
-    role: RoleType.User,
+    role: RoleType.Streamer,
     resetPasswordToken: 'resetPasswordToken',
   },
 ]
