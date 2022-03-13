@@ -9,11 +9,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('database.host'),
-        port: configService.get<number>('database.port'),
-        username: configService.get<string>('database.user'),
-        password: configService.get<string>('database.password'),
-        database: configService.get<string>('database.database'),
+        host: configService.get<string>('testDatabase.host'),
+        port: configService.get<number>('testDatabase.port'),
+        username: configService.get<string>('testDatabase.user'),
+        password: configService.get<string>('testDatabase.password'),
+        database: configService.get<string>('testDatabase.database'),
         keepConnectionAlive: true,
         migrationsRun: true,
         autoLoadEntities: true,
@@ -26,4 +26,4 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
     }),
   ],
 })
-export class DatabaseModule {}
+export class TestDatabaseModule {}
