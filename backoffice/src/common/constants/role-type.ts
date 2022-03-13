@@ -1,4 +1,5 @@
 export enum RoleType {
-  User = 'USER',
+  Streamer = 'STREAMER',
   Admin = 'ADMIN',
+  StreamProvider = 'STREAM_PROVIDER',
 }
