@@ -4,24 +4,31 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common'
-import { RedisCacheService } from 'modules/redis/redis-cache.service'
-import RequestWithUser from '../interface/request-with-user.interface'
+import { createError, ErrorTypeEnum, messages } from 'common'
+import { RedisCacheService } from '../../redis/redis-cache.service'
+import { RequestWithUser } from '../interface'
 
 @Injectable()
 export class TokenBlackListGuard implements CanActivate {
   constructor(private readonly redisCacheService: RedisCacheService) {}
+
   async canActivate(context: ExecutionContext) {
     const request: RequestWithUser = context.switchToHttp().getRequest()
 
     const auth = request.headers.authorization
     const requestToken = auth.split(' ')[1]
 
-    const existingToken = await this.redisCacheService.get<string>(
-      request.user.id,
-    )
+    const redisKey = `logout:${request.user.id}`
+
+    const existingToken = await this.redisCacheService.get<string>(redisKey)
 
     if (existingToken === requestToken) {
-      throw new UnauthorizedException('Login first')
+      throw new UnauthorizedException(
+        createError(
+          ErrorTypeEnum.INVALID_CONFIRMATION_CODE,
+          messages.errors.userNotAuthorized,
+        ),
+      )
     }
 
     return true
