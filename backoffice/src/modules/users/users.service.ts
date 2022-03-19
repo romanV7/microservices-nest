@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { RegisterDto } from 'modules/authentication/dto/register.dto'
+import { RegisterDto } from '../authentication/dto'
 import { Repository } from 'typeorm'
+import { createError, ErrorTypeEnum, messages, StatusType } from '../../common'
 import { UserEntity } from './user.entity'
 
 @Injectable()
@@ -19,7 +20,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({ id })
     if (!user) {
       throw new HttpException(
-        'User with this id does not exist',
+        createError(ErrorTypeEnum.USER_NOT_FOUND, messages.errors.userNotFound),
         HttpStatus.NOT_FOUND,
       )
     }
@@ -31,7 +32,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({ email })
     if (!user) {
       throw new HttpException(
-        `User with ${email} does not exist`,
+        createError(ErrorTypeEnum.USER_NOT_FOUND, messages.errors.userNotFound),
         HttpStatus.NOT_FOUND,
       )
     }
@@ -43,12 +44,43 @@ export class UsersService {
     return this.userRepository.findOne(params)
   }
 
-  async markEmailAsConfirmed(email: string) {
+  async markStatusAsConfirmed(email: string) {
     return this.userRepository.update(
       { email },
       {
-        emailVerified: true,
+        status: StatusType.Confirmed,
       },
     )
+  }
+
+  async setResetPasswordToken(email: string, resetPasswordToken: string) {
+    return this.userRepository.update(
+      { email },
+      {
+        resetPasswordToken,
+      },
+    )
+  }
+
+  async setPassword(email: string, password: string) {
+    return this.userRepository.update(
+      { email },
+      {
+        password,
+      },
+    )
+  }
+
+  async removeResetPasswordToken(email: string) {
+    return this.userRepository.update(
+      { email },
+      {
+        resetPasswordToken: null,
+      },
+    )
+  }
+
+  async findAll(): Promise<UserEntity[]> {
+    return this.userRepository.find()
   }
 }

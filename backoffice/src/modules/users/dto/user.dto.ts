@@ -1,7 +1,5 @@
 import { IsBoolean, IsEnum, IsString } from 'class-validator'
-import { StatusType } from '../../../common/constants/status-type'
-import { RoleType } from '../../../common/constants/role-type'
-import { AbstractDto } from '../../../common/dto/abstract.dto'
+import { AbstractDto, StatusType, RoleType } from '../../../common'
 
 export class UserDto extends AbstractDto {
   @IsString()
@@ -18,9 +16,6 @@ export class UserDto extends AbstractDto {
 
   @IsString()
   email: string
-
-  @IsBoolean()
-  emailVerified: boolean
 
   @IsString()
   password: string

@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
-
-import { UsersService } from './users.service'
-import { UsersController } from './users.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { UserEntity } from './user.entity'
 import { PassportModule } from '@nestjs/passport'
 import { ConfigService } from '@nestjs/config'
-import { RedisCacheModule } from 'modules/redis/redis-cache.module'
+import { UsersService } from './users.service'
+import { UsersController } from './users.controller'
+import { UserEntity } from './user.entity'
+import { RedisCacheModule } from '../redis/redis-cache.module'
 
 @Module({
   imports: [
