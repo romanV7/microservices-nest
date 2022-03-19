@@ -16,7 +16,8 @@ export class users1646252708705 implements MigrationInterface {
           {
             name: 'enabled',
             type: 'boolean',
-            isNullable: true,
+            isNullable: false,
+            default: false,
           },
           {
             name: 'status',
@@ -31,18 +32,12 @@ export class users1646252708705 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'emailVerified',
-            type: 'boolean',
-            isNullable: true,
-            default: false,
-          },
-          {
-            name: 'firstName',
+            name: 'first_name',
             type: 'character varying(255)',
             isNullable: true,
           },
           {
-            name: 'lastName',
+            name: 'last_name',
             type: 'character varying(255)',
             isNullable: true,
           },
@@ -54,22 +49,22 @@ export class users1646252708705 implements MigrationInterface {
           {
             name: 'role',
             type: 'enum',
-            enum: ['USER', 'ADMIN'],
-            default: `'USER'`,
+            enum: ['STREAMER', 'ADMIN', 'STREAM_PROVIDER'],
+            default: `'STREAMER'`,
             isNullable: false,
           },
           {
-            name: 'resetPasswordToken',
+            name: 'reset_password_token',
             type: 'character varying(255)',
             isNullable: true,
           },
           {
-            name: 'createdAt',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
           },
           {
-            name: 'updatedAt',
+            name: 'updated_at',
             type: 'timestamp',
             default: 'now()',
           },
