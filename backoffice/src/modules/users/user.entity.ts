@@ -1,9 +1,6 @@
 import { Entity, Column } from 'typeorm'
-
-import { AbstractEntity } from '../../common/abstract.entity'
-import { RoleType } from '../../common/constants/role-type'
-import { UserDto } from './dto/user.dto'
-import { StatusType } from '../../common/constants/status-type'
+import { AbstractEntity, RoleType, StatusType } from '../../common'
+import { UserDto } from './dto'
 import { PasswordTransformer } from './password.transformer'
 
 @Entity({ name: 'users' })
@@ -14,7 +11,7 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Column()
   lastName: string
 
-  @Column()
+  @Column({ nullable: false, default: false })
   enabled: boolean
 
   @Column({ type: 'enum', enum: StatusType, default: StatusType.UnConfirmed })
@@ -23,9 +20,6 @@ export class UserEntity extends AbstractEntity<UserDto> {
   @Column({ unique: true, nullable: false, length: 255 })
   email: string
 
-  @Column({ default: false })
-  emailVerified: boolean
-
   @Column({
     nullable: true,
     transformer: new PasswordTransformer(),
@@ -33,7 +27,7 @@ export class UserEntity extends AbstractEntity<UserDto> {
   })
   password: string
 
-  @Column({ type: 'enum', enum: RoleType, default: RoleType.User })
+  @Column({ type: 'enum', enum: RoleType, default: RoleType.Streamer })
   role: RoleType
 
   @Column()
