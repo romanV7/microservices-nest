@@ -17,9 +17,10 @@
     "migration:run": "ts-node node_modules/typeorm/cli.js migration:run -f ormconfig -c migrations",
     "migration:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig -c migrations -d src/migrations -n",
     "migration:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig -c migrations",
-    "seed:run": "ts-node node_modules/typeorm/cli.js migration:run -f ormconfig -c seeds",
-    "seed:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig -c seeds -d src/seeds -n",
-    "seed:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig -c seeds"
+    "test-migration:run": "ts-node node_modules/typeorm/cli.js migration:run -f ormconfig -c migrations-test",
+    "seed:run": "ts-node node_modules/typeorm/cli.js migration:run -f ormconfig -c seeds-test",
+    "seed:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig -c seeds-test -d src/seeds -n",
+    "seed:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig -c seeds-test"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.0",
@@ -37,6 +38,7 @@
     "bcrypt": "^5.0.1",
     "cache-manager": "^3.6.0",
     "cache-manager-redis-store": "^2.0.0",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -52,7 +54,8 @@
     "rxjs": "^7.5.4",
     "rxjs-compat": "^6.6.7",
     "swagger-ui-express": "^4.3.0",
-    "typeorm": "^0.2.44"
+    "typeorm": "^0.2.44",
+    "typeorm-naming-strategies": "^3.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.2.1",
