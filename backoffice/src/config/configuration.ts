@@ -13,10 +13,10 @@ export const configuration = () => ({
     database: process.env.DB_DATABASE,
   },
   testDatabase: {
-    host: process.env.TEST_DB_HOST,
-    port: Number(process.env.TEST_DB_PORT),
-    user: process.env.TEST_DB_USER,
-    password: process.env.TEST_DB_PASSWORD,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     database: process.env.TEST_DB_DATABASE,
   },
   redis: {

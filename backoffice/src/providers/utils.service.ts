@@ -21,4 +21,11 @@ export class UtilsService {
   ): Promise<string> {
     return (await util.promisify(crypto.randomBytes)(bytes)).toString(encoding)
   }
+
+  static comparePasswords(
+    oldPassword: string,
+    newPassword: string,
+  ): Promise<boolean> {
+    return bcrypt.compare(oldPassword, newPassword)
+  }
 }

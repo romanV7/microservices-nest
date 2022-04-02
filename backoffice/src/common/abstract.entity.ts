@@ -3,9 +3,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { AbstractDto } from './dto/abstract.dto'
 
-export abstract class AbstractEntity<T extends AbstractDto = AbstractDto> {
+export abstract class AbstractEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string
 

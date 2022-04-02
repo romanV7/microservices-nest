@@ -4,32 +4,57 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common'
-import { ResponseErrorTypeEnum } from '../common'
-// import { FastifyReply } from 'fastify'
+import { IErrorResponse } from 'common/interfaces'
+import { CommonErrors, ResponseErrorTypeEnum } from '../common'
+import { Response } from 'express'
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
-    const response = ctx.getResponse()
+    const response = ctx.getResponse<Response>()
     const exceptionBody: any = exception.getResponse()
-    const messageObj =
-      exceptionBody.message === 'Unauthorized'
-        ? { property: '[empty]', message: exceptionBody.message }
-        : exception.getResponse()
+
+    if (Object.values(CommonErrors).includes(exceptionBody.message)) {
+      const commonValidationErrorResponse: IErrorResponse = {
+        error: {
+          common: [exceptionBody.message],
+        },
+      }
+
+      return response
+        .status(exception.getStatus())
+        .send(commonValidationErrorResponse)
+    }
 
     if (exceptionBody.type === ResponseErrorTypeEnum.SCHEMA_VALIDATION_ERROR) {
-      response.status(exception.getStatus()).send({
-        statusCode: exception.getStatus(),
-        messages: exceptionBody.errors,
-      })
+      const schemaValidationErrorResponse: IErrorResponse = {
+        error: {
+          properties: exceptionBody.errors.map(error => ({
+            property: error.property,
+            errors: error.validationMessages,
+          })),
+        },
+      }
+
+      return response
+        .status(exception.getStatus())
+        .send(schemaValidationErrorResponse)
     }
-    console.log('My error message', {
-      statusCode: exception.getStatus(),
-      messages: [messageObj],
-    })
+
+    const defaultValidationErrorResponse: IErrorResponse = {
+      error: {
+        properties: [
+          {
+            property: exceptionBody.property,
+            errors: [exceptionBody.message],
+          },
+        ],
+      },
+    }
+
     return response
       .status(exception.getStatus())
-      .send({ statusCode: exception.getStatus(), messages: [messageObj] })
+      .send(defaultValidationErrorResponse)
   }
 }
