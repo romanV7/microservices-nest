@@ -10,10 +10,10 @@ export function errorParser(
   errors: ValidationError[],
 ): Record<string, unknown>[] {
   return errors.map(({ property, constraints, children }) => ({
-      property,
-      ...constraints && { constraints: Object.keys(constraints) },
-      ...children.length && { children: errorParser(children) },
-    }))
+    property,
+    ...(constraints && { validationMessages: Object.values(constraints) }),
+    ...(children && children.length && { children: errorParser(children) }),
+  }))
 }
 
 export const createError = (
