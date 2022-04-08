@@ -19,18 +19,22 @@ export class EmailConfirmationService {
     private readonly redisCacheService: RedisCacheService,
   ) {}
 
-  public async sendVerificationCode(email: string) {
+  public async sendVerificationCode(email: string, code: number) {
+    return this.emailService.sendText(
+      email,
+      MailerMessages.Register,
+      messages.authorization.register(code),
+    )
+  }
+
+  public async setRegisterCode(email: string): Promise<number> {
     const code = UtilsService.generateVerificationCode()
 
     const redisKey = `register:${email}`
 
     await this.redisCacheService.set(redisKey, code)
 
-    return this.emailService.sendText(
-      email,
-      MailerMessages.Register,
-      messages.authorization.register(code),
-    )
+    return code
   }
 
   public async confirmEmail(email: string) {
@@ -52,6 +56,12 @@ export class EmailConfirmationService {
     const redisKey = `register:${confirmEmailDto.email}`
 
     const existingCode = await this.redisCacheService.get<number>(redisKey)
+
+    if (!existingCode) {
+      throw new BadRequestException(
+        createError(ErrorTypeEnum.USER_NOT_FOUND, messages.errors.userNotFound),
+      )
+    }
 
     if (existingCode !== confirmEmailDto.code) {
       throw new BadRequestException(

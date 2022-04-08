@@ -1,7 +1,8 @@
-import { IsString, IsNotEmpty } from 'class-validator'
+import { IsString, IsNotEmpty, IsDefined } from 'class-validator'
 
 export class UserLogoutDto {
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   readonly token: string
 }
