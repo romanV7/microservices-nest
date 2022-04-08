@@ -1,10 +1,10 @@
-import { Entity, Column } from 'typeorm'
+import { Entity, Column, OneToMany } from 'typeorm'
 import { AbstractEntity, RoleType, StatusType } from '../../common'
-import { UserDto } from './dto'
 import { PasswordTransformer } from './password.transformer'
+import { StreamEntity } from '../streams/streams.entity'
 
-@Entity({ name: 'users' })
-export class UserEntity extends AbstractEntity<UserDto> {
+@Entity('users')
+export class UserEntity extends AbstractEntity {
   @Column()
   firstName: string
 
@@ -32,4 +32,13 @@ export class UserEntity extends AbstractEntity<UserDto> {
 
   @Column()
   resetPasswordToken: string
+
+  @Column()
+  viewingUrl: string
+
+  @OneToMany(
+    () => StreamEntity,
+    stream => stream.user,
+  )
+  streams: StreamEntity[]
 }

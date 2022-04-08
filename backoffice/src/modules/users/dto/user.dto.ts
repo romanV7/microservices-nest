@@ -1,4 +1,10 @@
-import { IsBoolean, IsEnum, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator'
 import { AbstractDto, StatusType, RoleType } from '../../../common'
 
 export class UserDto extends AbstractDto {
@@ -15,14 +21,20 @@ export class UserDto extends AbstractDto {
   status: StatusType
 
   @IsString()
+  @IsEmail({}, { message: 'email is not valid' })
+  @IsNotEmpty()
   email: string
-
-  @IsString()
-  password: string
 
   @IsEnum(RoleType)
   role: RoleType
 
-  @IsString()
-  resetPasswordToken: string
+  constructor(user) {
+    super(user)
+    this.firstName = user.firstName
+    this.lastName = user.lastName
+    this.enabled = user.enabled
+    this.status = user.status
+    this.email = user.email
+    this.role = user.role
+  }
 }
