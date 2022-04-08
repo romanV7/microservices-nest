@@ -2,7 +2,7 @@ import {
   Injectable,
   CanActivate,
   ExecutionContext,
-  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common'
 import {
   createError,
@@ -18,7 +18,7 @@ export class EmailConfirmationGuard implements CanActivate {
     const request: RequestWithUser = context.switchToHttp().getRequest()
 
     if (request.user?.status === StatusType.UnConfirmed) {
-      throw new UnauthorizedException(
+      throw new ForbiddenException(
         createError(
           ErrorTypeEnum.INVALID_CREDENTIALS,
           messages.errors.emailNotConfimed,

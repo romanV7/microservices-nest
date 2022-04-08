@@ -1,7 +1,6 @@
 import { JwtService } from '@nestjs/jwt'
 import {
-  HttpException,
-  HttpStatus,
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -13,7 +12,7 @@ import { RegisterDto, UserLoginDto, LoginResponse } from '../dto'
 import { UtilsService } from '../../../providers'
 import { RedisCacheService } from '../../redis/redis-cache.service'
 import { UserEntity } from '../../users/user.entity'
-import { createError, ErrorTypeEnum, messages } from 'common'
+import { createError, ErrorTypeEnum, messages } from '../../../common'
 
 @Injectable()
 export class AuthenticationService {
@@ -30,12 +29,11 @@ export class AuthenticationService {
     })
 
     if (existingUser) {
-      throw new HttpException(
+      throw new BadRequestException(
         createError(
-          ErrorTypeEnum.USER_ALREADY_EXIST,
+          ErrorTypeEnum.USER_ALREADY_EXISTS,
           messages.errors.userExists,
         ),
-        HttpStatus.BAD_REQUEST,
       )
     }
     return this.usersService.create(registrationData)

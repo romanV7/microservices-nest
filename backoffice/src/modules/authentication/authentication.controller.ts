@@ -4,6 +4,9 @@ import {
   Post,
   UnauthorizedException,
   UseGuards,
+  Headers,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common'
 import {
   ConfirmEmailDto,
@@ -12,13 +15,13 @@ import {
   RegisterDto,
   ResetPasswordDto,
   UserLoginDto,
-  UserLogoutDto,
 } from './dto'
 import {
   SuccessResponse,
   messages,
   createError,
   ErrorTypeEnum,
+  getTokenFromAuthHeader,
 } from '../../common'
 import { JwtAuthenticationGuard } from './guard'
 import { User } from '../../decorators'
@@ -29,8 +32,10 @@ import {
   EmailConfirmationService,
   AuthenticationService,
 } from './services'
+import { ApiTags } from '@nestjs/swagger'
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
@@ -41,13 +46,19 @@ export class AuthenticationController {
   @Post('register')
   async register(@Body() registrationData: RegisterDto): Promise<UserDto> {
     const user = await this.authenticationService.register(registrationData)
+
+    const token = await this.emailConfirmationService.setRegisterCode(
+      registrationData.email,
+    )
     await this.emailConfirmationService.sendVerificationCode(
       registrationData.email,
+      token,
     )
     return user
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async userLogin(@Body() userLoginDto: UserLoginDto): Promise<LoginResponse> {
     const loginResults: LoginResponse = await this.authenticationService.login(
       userLoginDto,
@@ -65,25 +76,33 @@ export class AuthenticationController {
   }
 
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthenticationGuard)
   async logout(
-    @Body() userLogoutDto: UserLogoutDto,
     @User() user: UserEntity,
+    @Headers('authorization') authorization: string,
   ): Promise<SuccessResponse> {
-    await this.authenticationService.logout(user.id, userLogoutDto.token)
+    await this.authenticationService.logout(
+      user.id,
+      getTokenFromAuthHeader(authorization),
+    )
 
-    return { message: 'ok' }
+    return { message: messages.authorization.logout }
   }
 
   @Post('/register/confirm')
+  @HttpCode(HttpStatus.OK)
   async confirmRegistration(
     @Body() confirmationData: ConfirmEmailDto,
-  ): Promise<void> {
+  ): Promise<SuccessResponse> {
     await this.emailConfirmationService.checkVerificationCode(confirmationData)
     await this.emailConfirmationService.confirmEmail(confirmationData.email)
+
+    return { message: messages.authorization.registrationConfirmed }
   }
 
   @Post('/password/reset')
+  @HttpCode(HttpStatus.OK)
   async resetPassword(
     @Body() resetPasswordData: ResetPasswordDto,
   ): Promise<void> {
@@ -97,9 +116,10 @@ export class AuthenticationController {
   }
 
   @Post('/password/reset/confirm')
+  @HttpCode(HttpStatus.OK)
   async confirmPasswordReset(
     @Body() confirmationData: ConfirmResetPasswordDto,
-  ): Promise<void> {
+  ): Promise<SuccessResponse> {
     const user = await this.resetPasswordConfirmationService.checkVerificationCode(
       confirmationData,
     )
@@ -107,5 +127,7 @@ export class AuthenticationController {
       user.email,
       confirmationData.password,
     )
+
+    return { message: messages.authorization.passwordResetConfirmed }
   }
 }

@@ -1,11 +1,24 @@
-import { IsString, IsEmail, IsNotEmpty } from 'class-validator'
+import { Transform } from 'class-transformer'
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsDefined,
+  MinLength,
+} from 'class-validator'
+import { transformToLowerCaseCallback } from '../../../common'
 
 export class UserLoginDto {
+  @IsDefined()
   @IsString()
-  @IsEmail({}, { message: 'Email is invalid' })
+  @IsNotEmpty()
+  @IsEmail({}, { message: 'email is not valid' })
+  @Transform(transformToLowerCaseCallback)
   readonly email: string
 
   @IsString()
-  @IsNotEmpty({ message: 'Password is required' })
+  @IsDefined()
+  @IsNotEmpty()
+  @MinLength(8)
   readonly password: string
 }

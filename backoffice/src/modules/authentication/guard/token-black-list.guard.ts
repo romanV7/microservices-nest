@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common'
-import { createError, ErrorTypeEnum, messages } from 'common'
+import { createError, ErrorTypeEnum, messages } from '../../../common'
 import { RedisCacheService } from '../../redis/redis-cache.service'
 import { RequestWithUser } from '../interface'
 
@@ -25,8 +25,8 @@ export class TokenBlackListGuard implements CanActivate {
     if (existingToken === requestToken) {
       throw new UnauthorizedException(
         createError(
-          ErrorTypeEnum.INVALID_CONFIRMATION_CODE,
-          messages.errors.userNotAuthorized,
+          ErrorTypeEnum.TOKEN_BLACKLISTED,
+          messages.errors.tokenBlacklisted,
         ),
       )
     }

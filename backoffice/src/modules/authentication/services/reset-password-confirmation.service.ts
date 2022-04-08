@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { UsersService } from '../../users/users.service'
 import { UtilsService, EmailService } from '../../../providers'
 import {
@@ -13,7 +8,7 @@ import {
   createError,
 } from '../../../common'
 import { ConfirmResetPasswordDto } from '../dto'
-import { UserDto } from 'modules/users/dto'
+import { UserDto } from '../../users/dto'
 
 @Injectable()
 export class ResetPasswordConfirmationService {
@@ -52,14 +47,7 @@ export class ResetPasswordConfirmationService {
       resetPasswordToken: confirmResetPasswordDto.code,
     })
 
-    if (!existingUser) {
-      throw new HttpException(
-        createError(ErrorTypeEnum.USER_NOT_FOUND, messages.errors.userNotFound),
-        HttpStatus.BAD_REQUEST,
-      )
-    }
-
-    if (existingUser.resetPasswordToken !== confirmResetPasswordDto.code) {
+    if (existingUser?.resetPasswordToken !== confirmResetPasswordDto.code) {
       throw new BadRequestException(
         createError(
           ErrorTypeEnum.INVALID_CONFIRMATION_CODE,
