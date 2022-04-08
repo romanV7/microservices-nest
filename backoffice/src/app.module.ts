@@ -8,9 +8,6 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `${process.cwd()}/src/config/env/${
-        process.env.NODE_ENV
-      }.env`,
       isGlobal: true,
       load: [configuration],
     }),
@@ -18,7 +15,5 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
     UsersModule,
     AuthenticationModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

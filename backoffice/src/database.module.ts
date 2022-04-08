@@ -18,7 +18,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
         migrationsRun: true,
         autoLoadEntities: true,
         logging: configService.get<string>('NODE_ENV') === 'development',
-        entities: [`${__dirname}/modules/**/*.entity.ts`],
+        entities: [`${__dirname}/modules/**/*.entity{.ts,.js}`],
         migrations: [`${__dirname}/migrations/*{.ts,.js}`],
         migrationsTableName: 'backend_migrations',
         namingStrategy: new SnakeNamingStrategy(),

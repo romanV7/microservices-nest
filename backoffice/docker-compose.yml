@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: ac-${COMPOSE_PROJECT_NAME}-app
+    build:
+      context: .
+      target: development
+      dockerfile: ./docker/dev/node/Dockerfile
+    environment:
+      HOME: .
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    links:
+      - db
+      - redis
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - local
+    restart: always
+    command: npm run start:dev
+
+  db:
+    container_name: ac-${COMPOSE_PROJECT_NAME}-db
+    image: postgres:13.5
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_MULTIPLE_DATABASES: ${DB_DATABASE},${TEST_DB_DATABASE}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - database-data:/var/lib/postgresql/data
+      - ./docker/dev/postgres/pg-init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - local
+
+  redis:
+    container_name: ac-${COMPOSE_PROJECT_NAME}-redis
+    image: redis:alpine
+    networks:
+      - local
+
+networks:
+  local:
+    name: local
+
+volumes:
+  database-data:

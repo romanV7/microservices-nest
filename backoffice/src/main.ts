@@ -4,14 +4,13 @@ import { ConfigService } from '@nestjs/config'
 import { BadRequestException, ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { setupSwagger } from 'viveo-swagger'
-import { TransformInterceptor } from './interceptors'
 import { HttpExceptionFilter } from './filters'
 import { errorParser, ResponseErrorTypeEnum } from './common'
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule)
-
-  const transformInterceptor = new TransformInterceptor()
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: ['debug', 'error', 'log', 'verbose', 'warn'],
+  })
 
   const httpExceptionFilter = new HttpExceptionFilter()
 
@@ -38,10 +37,7 @@ async function bootstrap() {
 
   const port = configService.get<number>('port')
 
-  app
-    .useGlobalPipes(validationPipe)
-    .useGlobalFilters(httpExceptionFilter)
-    .useGlobalInterceptors(transformInterceptor)
+  app.useGlobalPipes(validationPipe).useGlobalFilters(httpExceptionFilter)
 
   await app.listen(port)
 }
