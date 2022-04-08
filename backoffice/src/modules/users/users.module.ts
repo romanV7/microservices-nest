@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { PassportModule } from '@nestjs/passport'
 import { ConfigService } from '@nestjs/config'
 import { UsersService } from './users.service'
-import { UsersController } from './users.controller'
+import { UsersController, AdminsController } from './controllers'
 import { UserEntity } from './user.entity'
 import { RedisCacheModule } from '../redis/redis-cache.module'
 
@@ -23,7 +23,7 @@ import { RedisCacheModule } from '../redis/redis-cache.module'
     TypeOrmModule.forFeature([UserEntity]),
     RedisCacheModule,
   ],
-  controllers: [UsersController],
+  controllers: [UsersController, AdminsController],
   providers: [UsersService],
   exports: [UsersService],
 })
