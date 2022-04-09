@@ -25,8 +25,20 @@ export enum ErrorTypeEnum {
   TRANSITION_NOT_ALLOWED = 'TRANSITION_NOT_ALLOWED',
   STREAM_NOT_FOUND = 'STREAM_NOT_FOUND',
   UPDATE_STREAM = 'UPDATE_STREAM',
+  AXIOS_ERROR = 'AXIOS_ERROR',
+  COMPLETE_STREAM = 'COMPLETE_STREAM',
+  START_STREAM = 'START_STREAM',
+  STOP_STREAM = 'STOP_STREAM',
+  DEACTIVATING_STREAM = 'DEACTIVATING_STREAM',
+  INITIATE_STREAM = 'INITIATE_STREAM',
+  DEACTIVATE_COMPELTE_STREAM = 'DEACTIVATE_COMPELTE_STREAM',
 }
 
 export enum CommonErrors {
   UNAUTHORIZED = 'Unauthorized',
+}
+
+export const StreamProviderUrls = {
+  create: '/api/v1/droplets/create',
+  delete: '/api/v1/droplets/delete',
 }
