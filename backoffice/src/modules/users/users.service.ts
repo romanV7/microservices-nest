@@ -20,7 +20,8 @@ export class UsersService {
   ) {}
 
   create(createUserDto: RegisterDto): Promise<UserEntity> {
-    return this.userRepository.save(createUserDto)
+    const instance = this.userRepository.create(createUserDto)
+    return this.userRepository.save(instance)
   }
 
   async getById(id: string): Promise<UserDto> {

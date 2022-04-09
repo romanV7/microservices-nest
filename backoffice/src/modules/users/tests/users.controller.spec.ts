@@ -12,12 +12,15 @@ describe('UsersController', () => {
 
   beforeAll(async () => {
     testHelper = new TestHelper(await bootstrap())
-    seedsHelper = new SeedsHelper(testHelper.getConnection())
+    seedsHelper = new SeedsHelper(
+      testHelper.getConnection(),
+      testHelper.fixturesPath,
+    )
   })
 
   describe('POST, PUT, PATCH, DELETE endpoints:', () => {
     beforeEach(async () => {
-      await seedsHelper.createTestUsers()
+      await seedsHelper.loadFixtures()
 
       const payload = await testHelper.initBaseData()
 
@@ -127,7 +130,7 @@ describe('UsersController', () => {
 
   describe('GET endpoints:', () => {
     beforeAll(async () => {
-      await seedsHelper.createTestUsers()
+      await seedsHelper.loadFixtures()
 
       const payload = await testHelper.initBaseData()
 
