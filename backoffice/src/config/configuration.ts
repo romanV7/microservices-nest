@@ -1,3 +1,5 @@
+import * as path from 'path'
+
 export const configuration = () => ({
   NODE_ENV: process.env.NODE_ENV,
   port: Number(process.env.APP_PORT),
@@ -30,4 +32,11 @@ export const configuration = () => ({
     password: process.env.EMAIL_PASSWORD,
     smtp: process.env.EMAIL_SMTP,
   },
+  streamProvider: {
+    url: process.env.STREAM_PROVIDER_HOST,
+    username: process.env.STREAM_PROVIDER_USERNAME,
+    password: process.env.STREAM_PROVIDER_PASSWORD,
+    requestTimeout: Number(process.env.HTTP_REQUEST_TIMEOUT),
+  },
+  fixturesPath: path.join(process.env.PWD, '/src', '/fixtures'),
 })

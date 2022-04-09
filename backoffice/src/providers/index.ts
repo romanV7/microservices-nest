@@ -1,3 +1,7 @@
 export * from './utils.service'
 export * from './email.service'
 export * from './stream-status-transition.service'
+export * from './abstract-stream-provider.service'
+export * from './base-http-connector.service'
+export * from './digital-ocean-stream-provider.service'
+export * from './provide-constant-value'
