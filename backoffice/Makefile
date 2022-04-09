@@ -3,9 +3,8 @@ include Makefile-variables
 all: | ${NODE_ENV}
 
 ############# envs
-local: | docker-build docker-up test-db-migrate test
-dev: | docker-build docker-up
-prod: | docker-build docker-up
+development: | docker-build docker-up test-db-migrate test
+production: | docker-build docker-up
 
 ############## docker compose
 docker-build:
