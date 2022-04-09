@@ -1,29 +1,39 @@
-import { Connection } from 'typeorm'
-import { StreamEntity } from '../../modules/streams/streams.entity'
-import { UserEntity } from '../../modules/users/user.entity'
-import { streams, users } from '../seeds'
+import * as path from 'path'
+import {
+  Builder,
+  fixturesIterator,
+  Loader,
+  Parser,
+  Resolver,
+} from 'typeorm-fixtures-cli/dist'
+import { getRepository, Connection } from 'typeorm'
 
 export class SeedsHelper {
   private readonly connection: Connection
 
-  constructor(connection: Connection) {
+  private readonly fixturesPath: string
+
+  constructor(connection: Connection, fixturesPath: string) {
     this.connection = connection
+
+    this.fixturesPath = fixturesPath
   }
 
-  public async createTestUsers() {
-    return this.connection.getRepository(UserEntity).save(users)
-  }
+  public async loadFixtures() {
+    await this.connection.synchronize(true)
 
-  public async createTestStreams() {
-    const user: UserEntity = await this.connection
-      .getRepository(UserEntity)
-      .findOne({ email: 'confirmed@user.com' })
+    const loader = new Loader()
+    loader.load(path.resolve(this.fixturesPath))
 
-    return this.connection.getRepository(StreamEntity).save(
-      streams.map(stream => ({
-        ...stream,
-        user,
-      })),
-    )
+    const resolver = new Resolver()
+
+    const fixtures = resolver.resolve(loader.fixtureConfigs)
+    const builder = new Builder(this.connection, new Parser())
+
+    /* eslint-disable */
+    for (const fixture of fixturesIterator(fixtures)) {
+      const entity = await builder.build(fixture)
+      await getRepository(entity.constructor.name).save(entity)
+    }
   }
 }
