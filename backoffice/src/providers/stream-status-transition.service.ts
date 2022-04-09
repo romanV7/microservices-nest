@@ -16,10 +16,6 @@ export class StreamStatusTransitionService {
   ): boolean {
     const allowedTransitions = this.streamStatusMap[streamStatus]
 
-    // return allowedTransitions
-    //   ? allowedTransitions.includes(statusTransition)
-    //   : false
-
     return !!allowedTransitions?.includes(statusTransition)
   }
 }
