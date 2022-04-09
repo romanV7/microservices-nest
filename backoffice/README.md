@@ -11,21 +11,20 @@
 
 ### Steps
 
-`make local` - call to initialize local environment
-`make dev` - call to initialize dev environment
-`make prod` - call to initialize prod environment
+`make development` - call to initialize dev environment
+`make production` - call to initialize prod environment
 
 Project should be accessible by [http://localhost:3000](http://localhost:3000) by default.
-Port can be changed in src/config/env/development.env or src/config/env/production.env file by setting of `APP_PORT` variable.
+Port can be changed in `.env` file by setting of `APP_PORT` variable.
 Documentation should be accessible by [http://localhost:3000/api/documentation](http://localhost:3000/api/documentation) by default.
-Migrations run on application start. Before deployment copy env file `cp .env.dist .env`
+Migrations run on application start. Before deployment copy env file `cp .env.dev.local .env`
 
 <br />
 
 ### Available Environments
 
-- `dev` - load fixtures, run tests on dockerized `test` database, unload fixtures;
-- `prod` - tests and fixtures won't be ran;
+- `development` - run tests on dockerized `test` database;
+- `production` - tests and fixtures won't be ran;
 
 See `Makefile-variables` file to see environment variable values related to chosen environment.
 
