@@ -1,0 +1,24 @@
+entity: users
+items:
+  unconfirmedUser1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu1
+    firstName: Bob
+    lastName: Davidson
+    enabled: true
+    status: UNCONFIRMED
+    email: unconfirmed@user.com
+    password: password
+    role: STREAMER
+    resetPasswordToken: resetPasswordToken
+    viewingUrl: /9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu1
+  confirmedUser1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2
+    firstName: John
+    lastName: Smith
+    enabled: true
+    status: CONFIRMED
+    email: confirmed@user.com
+    password: password
+    role: STREAMER
+    resetPasswordToken: resetPasswordToken
+    viewingUrl: /9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2

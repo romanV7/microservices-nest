@@ -1,0 +1,74 @@
+entity: streams
+items:
+  createdStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb0s
+    title: '24.01 vs 1'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    maxViewersCount: 100000
+    status: CREATED
+    user: '@confirmedUser1'
+  activatingStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb1s
+    title: '24.02 vs 2'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    maxViewersCount: 100000
+    status: ACTIVATING
+    activationInitiatedAt: '2020-02-03T01:11:11.111Z'
+    user: '@confirmedUser1'
+  activatedStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb2s
+    title: '24.03 vs 3'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    inboundUrl: 'srt://292051871.acstreams.com:5050'
+    outboundUrl: 'https://do-stage.acstage.com/index.m3u8'
+    maxViewersCount: 100000
+    status: ACTIVATED
+    activationCompletedAt: '2020-03-03T01:11:11.111Z'
+    user: '@confirmedUser1'
+  startedStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb3s
+    title: '24.04 vs 4'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    inboundUrl: 'srt://292051871.acstreams.com:5050'
+    outboundUrl: 'https://do-stage.acstage.com/index.m3u8'
+    maxViewersCount: 100000
+    status: STARTED
+    startedAt: '2020-04-03T01:11:11.111Z'
+    user: '@confirmedUser1'
+  stoppedStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb4s
+    title: '24.05 vs 5'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    inboundUrl: 'srt://292051871.acstreams.com:5050'
+    outboundUrl: 'https://do-stage.acstage.com/index.m3u8'
+    maxViewersCount: 100000
+    status: STOPPED
+    user: '@confirmedUser1'
+  deactivatingStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb5s
+    title: '24.06 vs 6'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    inboundUrl: 'srt://292051871.acstreams.com:5050'
+    outboundUrl: 'https://do-stage.acstage.com/index.m3u8'
+    maxViewersCount: 100000
+    status: DEACTIVATING
+    deactivationInitiatedAt: '2020-05-03T01:11:11.111Z'
+    user: '@confirmedUser1'
+  deactivatedStream1:
+    id: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6s
+    title: '24.07 vs 7'
+    scheduledFor: '2020-01-03T01:11:11.111Z'
+    type: REGULAR
+    inboundUrl: 'srt://292051871.acstreams.com:5050'
+    outboundUrl: 'https://do-stage.acstage.com/index.m3u8'
+    archiveUrl: 'https://archive.com'
+    maxViewersCount: 100000
+    status: DEACTIVATED
+    deactivationCompletedAt: '2020-06-03T01:11:11.111Z'
+    user: '@confirmedUser1'
