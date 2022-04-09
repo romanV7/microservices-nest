@@ -6,6 +6,7 @@ import { AppModule } from './app.module'
 import { setupSwagger } from 'viveo-swagger'
 import { HttpExceptionFilter } from './filters'
 import { errorParser, ResponseErrorTypeEnum } from './common'
+import { useContainer } from 'typeorm'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -38,6 +39,11 @@ async function bootstrap() {
   const port = configService.get<number>('port')
 
   app.useGlobalPipes(validationPipe).useGlobalFilters(httpExceptionFilter)
+
+  useContainer(app.select(AppModule), {
+    fallback: true,
+    fallbackOnErrors: true,
+  })
 
   await app.listen(port)
 }
