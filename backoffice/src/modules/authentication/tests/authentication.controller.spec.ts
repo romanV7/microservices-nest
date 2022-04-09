@@ -1,10 +1,10 @@
 import * as request from 'supertest'
 import { HttpStatus } from '@nestjs/common'
 import { omit } from 'lodash'
-import { UserDto } from '../users/dto'
-import { ErrorTypeEnum, messages, SuccessResponse } from '../../common'
-import { LoginResponse, RegisterDto, ResetPasswordDto } from './dto'
-import { TestHelper, bootstrap, SeedsHelper } from '../../test-utils'
+import { UserDto } from '../../users/dto'
+import { ErrorTypeEnum, messages, SuccessResponse } from '../../../common'
+import { LoginResponse, RegisterDto, ResetPasswordDto } from '../dto'
+import { TestHelper, bootstrap, SeedsHelper } from '../../../test-utils'
 
 describe('AuthenticationController', () => {
   let testHelper: TestHelper
@@ -13,12 +13,15 @@ describe('AuthenticationController', () => {
 
   beforeAll(async () => {
     testHelper = new TestHelper(await bootstrap())
-    seedsHelper = new SeedsHelper(testHelper.getConnection())
+    seedsHelper = new SeedsHelper(
+      testHelper.getConnection(),
+      testHelper.fixturesPath,
+    )
   })
 
   describe('POST, PUT, PATCH, DELETE endpoints:', () => {
     beforeEach(async () => {
-      await seedsHelper.createTestUsers()
+      await seedsHelper.loadFixtures()
 
       const payload = await testHelper.initBaseData()
 

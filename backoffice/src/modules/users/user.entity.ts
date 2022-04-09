@@ -1,14 +1,14 @@
-import { Entity, Column, OneToMany } from 'typeorm'
+import { Entity, Column, OneToMany, AfterInsert } from 'typeorm'
 import { AbstractEntity, RoleType, StatusType } from '../../common'
 import { PasswordTransformer } from './password.transformer'
 import { StreamEntity } from '../streams/streams.entity'
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
-  @Column()
+  @Column({ nullable: true })
   firstName: string
 
-  @Column()
+  @Column({ nullable: true })
   lastName: string
 
   @Column({ nullable: false, default: false })
@@ -30,10 +30,10 @@ export class UserEntity extends AbstractEntity {
   @Column({ type: 'enum', enum: RoleType, default: RoleType.Streamer })
   role: RoleType
 
-  @Column()
+  @Column({ nullable: true })
   resetPasswordToken: string
 
-  @Column()
+  @Column({ nullable: true })
   viewingUrl: string
 
   @OneToMany(
@@ -41,4 +41,9 @@ export class UserEntity extends AbstractEntity {
     stream => stream.user,
   )
   streams: StreamEntity[]
+
+  @AfterInsert()
+  async validate() {
+    this.viewingUrl = `/${this.id}`
+  }
 }
