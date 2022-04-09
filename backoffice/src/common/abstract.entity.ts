@@ -1,11 +1,11 @@
-import {
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { CreateDateColumn, UpdateDateColumn, PrimaryColumn } from 'typeorm'
+import { v4 as uuidv4 } from 'uuid'
 
 export abstract class AbstractEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('varchar', {
+    length: 36,
+    default: () => `'${uuidv4()}'`,
+  })
   id: string
 
   @CreateDateColumn({
