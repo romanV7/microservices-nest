@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common'
 import { StreamsService } from './streams.service'
 import { StreamsController } from './streams.controller'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { StreamEntity } from './streams.entity'
 import { RedisCacheModule } from '../redis/redis-cache.module'
 import { UsersModule } from '../users/users.module'
 import {
@@ -12,11 +10,7 @@ import {
 } from '../../providers'
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([StreamEntity]),
-    RedisCacheModule,
-    UsersModule,
-  ],
+  imports: [RedisCacheModule, UsersModule],
   controllers: [StreamsController],
   providers: [
     StreamsService,
