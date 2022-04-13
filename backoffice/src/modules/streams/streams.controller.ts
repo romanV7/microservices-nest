@@ -40,7 +40,7 @@ export class StreamsController {
   ): Observable<StreamDto> {
     return this.streamsService.createTransport<StreamDto>({
       ...createStreamDto,
-      user,
+      userId: user.id,
     })
   }
 
