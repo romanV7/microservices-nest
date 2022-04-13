@@ -1,0 +1,16 @@
+include .env
+
+export HOST_IP := $(shell ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $$2 }' | cut -f2 -d: | head -n1)
+
+# Define exec params per env; 
+ifeq ($(NODE_ENV), development)
+  export COMPOSE_FILE_OPTION = -f docker-compose.yml
+endif
+
+ifeq ($(NODE_ENV), production)
+ export COMPOSE_FILE_OPTION = -f docker-compose.prod.yml
+endif
+
+export COMPOSE_EXEC_INTERACTIVE_OPTIONS = -T
+export COMPOSE_EXEC_OPTIONS = ${COMPOSE_EXEC_INTERACTIVE_OPTIONS}
+export DOCKER_APP_WORKDIR = /usr/src/app
