@@ -39,4 +39,8 @@ export const configuration = () => ({
     requestTimeout: Number(process.env.HTTP_REQUEST_TIMEOUT),
   },
   fixturesPath: path.join(process.env.PWD, '/src', '/fixtures'),
+  api: {
+    host: process.env.API_TRANSPORT_HOST,
+    port: Number(process.env.API_TRANSPORT_PORT),
+  },
 })
