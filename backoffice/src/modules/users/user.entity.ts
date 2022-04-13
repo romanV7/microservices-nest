@@ -1,7 +1,6 @@
-import { Entity, Column, OneToMany, AfterInsert } from 'typeorm'
+import { Entity, Column, AfterInsert } from 'typeorm'
 import { AbstractEntity, RoleType, StatusType } from '../../common'
 import { PasswordTransformer } from './password.transformer'
-import { StreamEntity } from '../streams/streams.entity'
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
@@ -35,12 +34,6 @@ export class UserEntity extends AbstractEntity {
 
   @Column({ nullable: true })
   viewingUrl: string
-
-  @OneToMany(
-    () => StreamEntity,
-    stream => stream.user,
-  )
-  streams: StreamEntity[]
 
   @AfterInsert()
   async validate() {

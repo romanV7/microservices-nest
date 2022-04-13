@@ -1,6 +1,5 @@
-import { Entity, Column, ManyToOne } from 'typeorm'
+import { Entity, Column } from 'typeorm'
 import { AbstractEntity, StreamStatus, StreamType } from '../../common'
-import { UserEntity } from '../users/user.entity'
 import { IntervalTransformer } from './interval.transformer'
 
 @Entity('streams')
@@ -61,9 +60,6 @@ export class StreamEntity extends AbstractEntity {
   @Column({ type: 'timestamp', nullable: true })
   deletedAt: Date
 
-  @ManyToOne(
-    () => UserEntity,
-    user => user.streams,
-  )
-  user: UserEntity
+  @Column({ nullable: false })
+  userId: string
 }

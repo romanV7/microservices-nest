@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  app:
+    container_name: ${COMPOSE_PROJECT_NAME}-app
+    build:
+      context: .
+      target: production
+      dockerfile: ./docker/prod/node/Dockerfile
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - local
+    restart: always
+    command: npm run start:prod
+
+  db:
+    container_name: ${COMPOSE_PROJECT_NAME}-db
+    image: postgres:13.5
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    networks:
+      - local
+
+networks:
+  local:
+    name: local
+
+volumes:
+  database-data:

@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm'
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
 export class streams1648208577387 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -131,24 +126,9 @@ export class streams1648208577387 implements MigrationInterface {
       }),
       true,
     )
-
-    await queryRunner.createForeignKey(
-      'streams',
-      new TableForeignKey({
-        name: 'FK_3ddc983c5f7bcf132fd8732c3f4',
-        columnNames: ['user_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'users',
-        onDelete: 'CASCADE',
-      }),
-    )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey(
-      'streams',
-      'FK_3ddc983c5f7bcf132fd8732c3f4',
-    )
     await queryRunner.dropTable('streams')
   }
 }

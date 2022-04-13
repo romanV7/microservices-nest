@@ -1,4 +1,4 @@
-# Streaming API
+# Backoffice API
 
 ## Deployment
 
