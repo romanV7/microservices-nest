@@ -7,6 +7,7 @@ import { setupSwagger } from 'viveo-swagger'
 import { HttpExceptionFilter } from './filters'
 import { errorParser, ResponseErrorTypeEnum } from './common'
 import { useContainer } from 'typeorm'
+import { MicroserviceOptions } from '@nestjs/microservices'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -44,6 +45,17 @@ async function bootstrap() {
     fallback: true,
     fallbackOnErrors: true,
   })
+
+  app.connectMicroservice<MicroserviceOptions>({
+    options: {
+      host: configService.get<number>('api.host'),
+      port: configService.get<number>('api.port'),
+      retryAttempts: 5,
+      retryDelay: 3000,
+    },
+  })
+
+  await app.startAllMicroservices()
 
   await app.listen(port)
 }
