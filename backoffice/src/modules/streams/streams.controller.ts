@@ -69,7 +69,6 @@ export class StreamsController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   findOne(@Param('streamId') streamId: string): Observable<StreamDto> {
-    console.log({ streamId })
     return this.streamsService.findOneTransport<StreamDto>(streamId)
   }
 

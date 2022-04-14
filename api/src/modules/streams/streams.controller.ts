@@ -40,7 +40,6 @@ export class StreamsController {
     cmd: 'find-by-id-stream',
   })
   findOneTransport(streamId: string) {
-    console.log({ streamId })
     return this.streamsService.findOne(streamId)
   }
 

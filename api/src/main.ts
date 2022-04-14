@@ -55,13 +55,6 @@ async function bootstrap() {
     },
   })
 
-  console.log({
-    host: configService.get<number>('api.host'),
-    port: configService.get<number>('api.port'),
-    retryAttempts: 5,
-    retryDelay: 3000,
-  })
-
   await app.startAllMicroservices()
 
   await app.listen(port)
