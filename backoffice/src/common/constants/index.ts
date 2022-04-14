@@ -1,5 +1,7 @@
 export * from './role-type'
 export * from './status-type'
+export * from './stream-status'
+export * from './stream-type'
 
 export enum MailerMessages {
   Register = 'Email confirmation',
