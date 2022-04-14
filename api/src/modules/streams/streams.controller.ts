@@ -2,12 +2,7 @@ import { Controller } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { StreamsService } from './streams.service'
 import { MessagePattern } from '@nestjs/microservices'
-import {
-  createEntityCommand,
-  EEntityNames,
-  EntityOperation,
-  IUser,
-} from '../../common'
+import { IUser } from '../../common'
 import { ICompleteStream, ICreateStream, IUpdateStream } from './interfaces'
 
 @Controller('streams')
@@ -16,21 +11,21 @@ export class StreamsController {
   constructor(private readonly streamsService: StreamsService) {}
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.ADD),
+    cmd: 'add-stream',
   })
   createTransport(createStreamDto: ICreateStream) {
     return this.streamsService.create(createStreamDto)
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.DELETE),
+    cmd: 'delete-stream',
   })
   removeTransport(streamId: string) {
     return this.streamsService.remove(streamId)
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.UPDATE),
+    cmd: 'update-stream',
   })
   updateTransport({
     entityId,
@@ -42,14 +37,15 @@ export class StreamsController {
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.FIND_BY_ID),
+    cmd: 'find-by-id-stream',
   })
   findOneTransport(streamId: string) {
+    console.log({ streamId })
     return this.streamsService.findOne(streamId)
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.INITIATE),
+    cmd: 'initiate-stream',
   })
   initiateTransport({
     entityId,
@@ -61,7 +57,7 @@ export class StreamsController {
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.COMPLETE),
+    cmd: 'complete-stream',
   })
   completeTransport({
     entityId,
@@ -73,24 +69,21 @@ export class StreamsController {
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.START),
+    cmd: 'start-stream',
   })
   startTransport(streamId: string) {
     return this.streamsService.start(streamId)
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(EEntityNames.STREAM, EntityOperation.STOP),
+    cmd: 'stop-stream',
   })
   stopTransport(streamId: string) {
     return this.streamsService.stop(streamId)
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(
-      EEntityNames.STREAM,
-      EntityOperation.DEACTIVATION_INITIATE,
-    ),
+    cmd: 'deactivation-initiate-stream',
   })
   deactivationInitiateTransport({
     entityId,
@@ -102,10 +95,7 @@ export class StreamsController {
   }
 
   @MessagePattern({
-    cmd: createEntityCommand(
-      EEntityNames.STREAM,
-      EntityOperation.DEACTIVATION_COMPLETE,
-    ),
+    cmd: 'deactivation-complete-stream',
   })
   completeDeactivationTransport(streamId: string) {
     return this.streamsService.deactivationComplete(streamId)

@@ -6,7 +6,9 @@ export class CrudTransportEntityTemplate {
   constructor(
     public readonly clientProxy: ClientProxy,
     public readonly apiName: EEntityNames,
-  ) {}
+  ) {
+    console.log({ clientProxy, apiName })
+  }
 
   findAllTransportPaginated<T>(query = {}): Observable<T> {
     return this.clientProxy.send(
@@ -23,6 +25,11 @@ export class CrudTransportEntityTemplate {
   }
 
   findOneTransport<T>(entityId): Observable<T> {
+    console.log({
+      cnd: createEntityCommand(this.apiName, EntityOperation.FIND_BY_ID),
+      entityId,
+      c: this.clientProxy,
+    })
     return this.clientProxy.send(
       createEntityCommand(this.apiName, EntityOperation.FIND_BY_ID),
       entityId,

@@ -102,9 +102,6 @@
         "tsconfig": "./tsconfig.json",
         "isolatedModules": true
       }
-    },
-    "setupFilesAfterEnv": [
-      "./setupTests.ts"
-    ]
+    }
   }
 }
