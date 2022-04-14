@@ -1,6 +1,5 @@
 import * as request from 'supertest'
 import { HttpStatus } from '@nestjs/common'
-import { omit } from 'lodash'
 import { UserDto } from '../../users/dto'
 import { ErrorTypeEnum, messages, SuccessResponse } from '../../../common'
 import { LoginResponse, RegisterDto, ResetPasswordDto } from '../dto'
@@ -162,7 +161,7 @@ describe('AuthenticationController', () => {
 
         expect(response.body).toBeDefined()
 
-        expect(omit(user, ['id'])).toMatchObject({
+        expect(user).toMatchObject({
           status: 'UNCONFIRMED',
           email: 'jake@user.com',
           role: 'STREAMER',
@@ -335,7 +334,8 @@ describe('AuthenticationController', () => {
 
         expect(userResponse.body).toBeDefined()
 
-        expect(omit(user, ['id'])).toMatchObject({
+        expect(user).toMatchObject({
+          id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2',
           firstName: 'John',
           lastName: 'Smith',
           enabled: true,
@@ -397,7 +397,8 @@ describe('AuthenticationController', () => {
 
         const user: UserDto = userResponse.body
 
-        expect(omit(user, ['id'])).toMatchObject({
+        expect(user).toMatchObject({
+          id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2',
           firstName: 'John',
           lastName: 'Smith',
           enabled: true,

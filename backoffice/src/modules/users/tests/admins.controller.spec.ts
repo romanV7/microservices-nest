@@ -1,5 +1,4 @@
 import * as request from 'supertest'
-import { isArray, omit } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { HttpStatus } from '@nestjs/common'
 import { UserDto } from '../dto'
@@ -191,11 +190,11 @@ describe('AdminsController', () => {
 
         expect(response.body).toBeDefined()
         expect(response.statusCode).toEqual(HttpStatus.OK)
-        expect(isArray(users)).toBe(true)
 
-        expect(JSON.stringify(users.map(_ => omit(_, ['id'])))).toEqual(
+        expect(JSON.stringify(users)).toEqual(
           JSON.stringify([
             {
+              id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu1',
               firstName: 'Bob',
               lastName: 'Davidson',
               enabled: true,
@@ -204,6 +203,7 @@ describe('AdminsController', () => {
               role: 'STREAMER',
             },
             {
+              id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2',
               firstName: 'John',
               lastName: 'Smith',
               enabled: true,
@@ -264,7 +264,8 @@ describe('AdminsController', () => {
 
         expect(user.id).toBe(confirmedUser.id)
 
-        expect(omit(user, ['id'])).toMatchObject({
+        expect(user).toMatchObject({
+          id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2',
           firstName: 'John',
           lastName: 'Smith',
           enabled: true,
