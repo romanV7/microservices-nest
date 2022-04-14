@@ -32,7 +32,7 @@ import {
   EmailConfirmationService,
   AuthenticationService,
 } from './services'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 @Controller('auth')
 @ApiTags('auth')
@@ -76,6 +76,7 @@ export class AuthenticationController {
   }
 
   @Post('logout')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthenticationGuard)
   async logout(

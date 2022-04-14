@@ -17,7 +17,7 @@ import { UsersService } from '../users.service'
 import { UserDto } from '../dto'
 import { ChangePasswordDto } from '../dto/change-password.dto'
 import { messages, SuccessResponse } from '../../../common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
 @Controller('admin')
 @ApiTags('admin')
@@ -26,18 +26,21 @@ export class AdminsController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('/users')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthenticationGuard)
   findAll(): Promise<UserDto[]> {
     return this.usersService.findAll()
   }
 
   @Get('/users/:userId')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthenticationGuard)
   findOne(@Param('userId') userId: string): Promise<UserDto> {
     return this.usersService.getById(userId)
   }
 
   @Post('/users/:userId/password/change')
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthenticationGuard)
   async changePassword(

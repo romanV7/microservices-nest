@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import {
   EmailConfirmationGuard,
   JwtAuthenticationGuard,
@@ -34,6 +34,7 @@ export class StreamsController {
   constructor(private readonly streamsService: StreamsService) {}
 
   @Post()
+  @ApiBearerAuth()
   create(
     @Body() createStreamDto: CreateStreamDto,
     @User() user: UserEntity,
@@ -46,12 +47,14 @@ export class StreamsController {
 
   @Delete(':streamId')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   remove(@Param('streamId') streamId: string) {
     return this.streamsService.removeTransport(streamId)
   }
 
   @Patch(':streamId')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   update(
     @Param('streamId') streamId: string,
     @Body() updateStreamDto: UpdateStreamDto,
@@ -64,12 +67,14 @@ export class StreamsController {
 
   @Get(':streamId')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   findOne(@Param('streamId') streamId: string): Observable<StreamDto> {
     return this.streamsService.findOneTransport<StreamDto>(streamId)
   }
 
   @Post(':streamId/activation/initiate')
   @HttpCode(HttpStatus.ACCEPTED)
+  @ApiBearerAuth()
   initiate(
     @Param('streamId') streamId: string,
     @User() user: UserEntity,
@@ -79,6 +84,7 @@ export class StreamsController {
 
   @Post(':streamId/activation/complete')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   complete(
     @Param('streamId') streamId: string,
     @Body() completeStreamDto: CompleteStreamDto,
@@ -91,18 +97,21 @@ export class StreamsController {
 
   @Post(':streamId/start')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   start(@Param('streamId') streamId: string): Observable<StreamDto> {
     return this.streamsService.startTransport<StreamDto>(streamId)
   }
 
   @Post(':streamId/stop')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   stop(@Param('streamId') streamId: string): Observable<StreamDto> {
     return this.streamsService.stopTransport<StreamDto>(streamId)
   }
 
   @Post(':streamId/deactivation/initiate')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   deactivationInitiate(
     @Param('streamId') streamId: string,
     @User() user: UserEntity,
@@ -115,6 +124,7 @@ export class StreamsController {
 
   @Post(':streamId/deactivation/complete')
   @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
   completeDeactivation(
     @Param('streamId') streamId: string,
   ): Observable<StreamDto> {

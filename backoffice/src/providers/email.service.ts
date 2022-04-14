@@ -31,6 +31,6 @@ export class EmailService {
       from: this.from,
       text,
     }
-    return this.transport.sendMail(options)
+    // return this.transport.sendMail(options)
   }
 }
