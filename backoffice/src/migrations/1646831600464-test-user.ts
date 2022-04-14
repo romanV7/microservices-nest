@@ -14,7 +14,7 @@ export class testUser1646831600464 implements MigrationInterface {
         "role",
         "reset_password_token"
       ) VALUES (
-        'test', 'test', true, 'CONFIRMED', 'test@user.com', 'password', 'STREAMER', 'resetPasswordToken'
+        'test', 'test', true, 'CONFIRMED', 'test@user.com', '$2b$10$8GV1qZrAmrQ.A17KlWeCsesL8use9IOo2PyTGV/H4zfuZe.4VUGHy', 'STREAMER', 'resetPasswordToken'
       )`,
       undefined,
     )

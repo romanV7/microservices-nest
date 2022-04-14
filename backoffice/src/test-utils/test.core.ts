@@ -17,7 +17,6 @@ import { UsersModule } from '../modules/users/users.module'
 import { AuthenticationModule } from '../modules/authentication/authentication.module'
 import { EmailService } from '../providers'
 import { mockEmailService } from './helpers'
-import { StreamsModule } from '../modules/streams/streams.module'
 
 export async function bootstrap() {
   const module: TestingModule = await Test.createTestingModule({
@@ -29,7 +28,6 @@ export async function bootstrap() {
       TestDatabaseModule,
       UsersModule,
       AuthenticationModule,
-      StreamsModule,
     ],
   })
     .overrideProvider(EmailService)

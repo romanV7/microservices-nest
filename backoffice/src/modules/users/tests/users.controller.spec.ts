@@ -1,6 +1,5 @@
 import * as request from 'supertest'
 import { HttpStatus } from '@nestjs/common'
-import { omit } from 'lodash'
 import { UserDto } from '../dto'
 import { ErrorTypeEnum, messages, SuccessResponse } from '../../../common'
 import { TestHelper, bootstrap, SeedsHelper } from '../../../test-utils'
@@ -148,7 +147,8 @@ describe('UsersController', () => {
         expect(response.body).toBeDefined()
         expect(response.statusCode).toEqual(HttpStatus.OK)
 
-        expect(omit(user, ['id'])).toMatchObject({
+        expect(user).toMatchObject({
+          id: '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcbu2',
           firstName: 'John',
           lastName: 'Smith',
           enabled: true,
