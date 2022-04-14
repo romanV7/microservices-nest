@@ -7,7 +7,7 @@ export class TcpApiTransport extends CrudTransportEntityTemplate {
 
   public static readonly tcpAdapter = createApiTransport({
     host: TcpApiTransport.configService.get<string>('api.host'),
-    port: TcpApiTransport.configService.get<number>('api.port'),
+    port: 4000, //TcpApiTransport.configService.get<number>('api.port'),
   })
 
   constructor(public readonly apiName: EEntityNames) {
