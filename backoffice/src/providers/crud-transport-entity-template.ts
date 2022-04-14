@@ -1,5 +1,5 @@
 import { ClientProxy } from '@nestjs/microservices'
-import { EEntityNames, EntityOperation, createEntityCommand } from 'common'
+import { EEntityNames, EntityOperation, createEntityCommand } from '../common'
 import { Observable } from 'rxjs'
 
 export class CrudTransportEntityTemplate {
