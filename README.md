@@ -1,7 +1,7 @@
 # Video Streaming Project
 
 ## General description
-Streaming comprises all tasks for planning, controllin and providing processes along the value chain. Streaming service comprises the complete approach to all processes in streaming that are necessary to stream a video.
+Streaming comprises all tasks for planning, controlling and providing processes along the value chain. Streaming service comprises the complete approach to all processes in streaming that are necessary to stream a video.
 
 It deals with the interaction of:
 
