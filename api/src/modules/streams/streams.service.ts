@@ -27,32 +27,44 @@ export class StreamsService {
   ) {}
 
   create(createStreamDto): Promise<StreamDto> {
-    return this.knex.table('streams').insert({
-      ...createStreamDto,
-      status: StreamStatus.Created,
-    })
+    try {
+      return this.knex.table('streams').insert({
+        ...createStreamDto,
+        status: StreamStatus.Created,
+      })
+    } catch (error) {
+      console.log(`Unable to create stream with data ${createStreamDto}`)
+    }
   }
 
   remove(id: string) {
-    return this.knex
-      .table('users')
-      .where('id', id)
-      .del()
+    try {
+      return this.knex
+        .table('users')
+        .where('id', id)
+        .del()
+    } catch (error) {
+      console.log(`Unable to delete stream with id ${id}`)
+    }
   }
 
   async findOne(id: string): Promise<StreamDto> {
-    const stream = await this.knex.table('streams').where('id', id)
+    try {
+      const stream = await this.knex.table('streams').where('id', id)
 
-    if (!stream) {
-      throw new NotFoundException(
-        createError(
-          ErrorTypeEnum.STREAM_NOT_FOUND,
-          messages.errors.streamNotFound,
-        ),
-      )
+      if (!stream) {
+        throw new NotFoundException(
+          createError(
+            ErrorTypeEnum.STREAM_NOT_FOUND,
+            messages.errors.streamNotFound,
+          ),
+        )
+      }
+
+      return new StreamDto(stream)
+    } catch (error) {
+      console.log(`Stream with id ${id} not found`)
     }
-
-    return new StreamDto(stream)
   }
 
   async update(id: string, updateStreamDto): Promise<StreamDto> {
@@ -63,11 +75,18 @@ export class StreamsService {
         createError(ErrorTypeEnum.UPDATE_STREAM, messages.errors.updateStream),
       )
     }
-
-    return this.knex.table('streams').insert({
-      ...property,
-      ...updateStreamDto,
-    })
+    try {
+      return this.knex.table('streams').insert({
+        ...property,
+        ...updateStreamDto,
+      })
+    } catch (error) {
+      console.log(
+        `Unable to update stream with id ${id}, payload ${JSON.stringify(
+          updateStreamDto,
+        )}`,
+      )
+    }
   }
 
   protected validateStream(
@@ -93,13 +112,21 @@ export class StreamsService {
       value: messages.errors.initiateStream,
     })
 
-    await this.digitalOceanStreamProviderService.create({
-      streamId: stream.id,
-      streamerId: userId,
-      environment: this.configService.get<string>('NODE_ENV'),
-      hosts: stream.maxViewersCount,
-      duration: stream.scheduledDuration,
-    })
+    try {
+      await this.digitalOceanStreamProviderService.create({
+        streamId: stream.id,
+        streamerId: userId,
+        environment: this.configService.get<string>('NODE_ENV'),
+        hosts: stream.maxViewersCount,
+        duration: stream.scheduledDuration,
+      })
+    } catch (error) {
+      console.log(
+        `Something went wrong with iniating stream, error: ${JSON.stringify(
+          error,
+        )}`,
+      )
+    }
 
     return this.update(id, {
       status: StreamStatus.Activating,
@@ -156,7 +183,11 @@ export class StreamsService {
   }
 
   async getByOptions(params: Partial<StreamDto>): Promise<StreamDto> {
-    return this.knex.table('streams').where('id', params)
+    try {
+      return this.knex.table('streams').where('id', params)
+    } catch (error) {
+      console.log(`Unable to find stream by param ${params}`)
+    }
   }
 
   async findAll(): Promise<StreamDto[]> {
@@ -171,10 +202,18 @@ export class StreamsService {
       value: messages.errors.deactivatingStream,
     })
 
-    await this.digitalOceanStreamProviderService.delete({
-      streamId: stream.id,
-      streamerId: userId,
-    })
+    try {
+      await this.digitalOceanStreamProviderService.delete({
+        streamId: stream.id,
+        streamerId: userId,
+      })
+    } catch (error) {
+      console.log(
+        `Something went wrong with deactivating stream, error: ${JSON.stringify(
+          error,
+        )}`,
+      )
+    }
 
     return this.knex.table('streams').insert({
       ...stream,
