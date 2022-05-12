@@ -4,28 +4,24 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+
 import { RegisterDto } from '../authentication/dto'
-import { Repository } from 'typeorm'
 import { createError, ErrorTypeEnum, messages, StatusType } from '../../common'
-import { UserEntity } from './user.entity'
 import { ChangePasswordDto, UserDto } from './dto'
 import { UtilsService } from '../../providers'
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(@InjectModel() private readonly knex: Knex) {}
 
-  create(createUserDto: RegisterDto): Promise<UserEntity> {
-    const instance = this.userRepository.create(createUserDto)
-    return this.userRepository.save(instance)
+  create(createUserDto: RegisterDto): Promise<UserDto> {
+    return this.knex.table('users').insert(createUserDto)
   }
 
   async getById(id: string): Promise<UserDto> {
-    const user = await this.userRepository.findOne({ id })
+    const user = await this.knex.table('users').where('id', id)
     if (!user) {
       throw new NotFoundException(
         createError(ErrorTypeEnum.USER_NOT_FOUND, messages.errors.userNotFound),
@@ -35,8 +31,8 @@ export class UsersService {
     return new UserDto(user)
   }
 
-  async getByEmail(email: string): Promise<UserEntity> {
-    const user = await this.userRepository.findOne({ email })
+  async getByEmail(email: string) {
+    const user = await this.knex.table('users').where('email', email)
     if (!user) {
       throw new NotFoundException(
         createError(ErrorTypeEnum.USER_NOT_FOUND, messages.errors.userNotFound),
@@ -46,53 +42,48 @@ export class UsersService {
     return user
   }
 
-  async getByOptions(params: Partial<UserEntity>): Promise<UserEntity> {
-    return this.userRepository.findOne(params)
+  async getByOptions(params: Partial<UserDto>): Promise<UserDto> {
+    return this.knex.table('users').where('id', params)
   }
 
   async markStatusAsConfirmed(email: string) {
-    return this.userRepository.update(
-      { email },
-      {
+    return this.knex
+      .table('users')
+      .where('email', email)
+      .update({
         status: StatusType.Confirmed,
-      },
-    )
+      })
   }
 
   async setResetPasswordToken(email: string, resetPasswordToken: string) {
-    return this.userRepository.update(
-      { email },
-      {
+    return this.knex
+      .table('users')
+      .where('email', email)
+      .update({
         resetPasswordToken,
-      },
-    )
+      })
   }
 
   async setPassword(email: string, password: string) {
-    return this.userRepository.update(
-      { email },
-      {
+    return this.knex
+      .table('users')
+      .where('email', email)
+      .update({
         password,
-      },
-    )
+      })
   }
 
   async removeResetPasswordToken(email: string) {
-    return this.userRepository.update(
-      { email },
-      {
+    return this.knex
+      .table('users')
+      .where('email', email)
+      .update({
         resetPasswordToken: null,
-      },
-    )
+      })
   }
 
   async findAll(): Promise<UserDto[]> {
-    const users: UserEntity[] = await this.userRepository.find({
-      order: {
-        createdAt: 'ASC',
-      },
-    })
-
+    const users: UserDto[] = await this.knex.table('users')
     return users.map(_ => new UserDto(_))
   }
 
@@ -100,7 +91,7 @@ export class UsersService {
     userId: string,
     changePasswordData: ChangePasswordDto,
   ): Promise<void> {
-    const user = await this.getByOptions({ id: userId })
+    const user: any = await this.getByOptions({ id: userId })
 
     const {
       oldPassword,

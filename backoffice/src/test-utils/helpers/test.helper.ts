@@ -1,7 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { RedisCacheService } from '../../modules/redis/redis-cache.service'
 import { UsersService } from '../../modules/users/users.service'
-import { UserEntity } from '../../modules/users/user.entity'
 import { BaseTestHelper } from './base-test.helper'
 import { ConfigService } from '@nestjs/config'
 import { StreamDto } from '../../modules/streams/dto'
@@ -25,7 +24,7 @@ export class TestHelper extends BaseTestHelper {
   }
 
   public async getPasswordResetToken(userId: string): Promise<string> {
-    const user: UserEntity = await this.usersService.getByOptions({
+    const user = await this.usersService.getByOptions({
       id: userId,
     })
 

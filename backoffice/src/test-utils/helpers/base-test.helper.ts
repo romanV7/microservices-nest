@@ -1,17 +1,11 @@
 import * as request from 'supertest'
 import { INestApplication } from '@nestjs/common'
-import { getConnectionToken } from '@nestjs/typeorm'
-import { Connection } from 'typeorm'
 
 export class BaseTestHelper {
   protected readonly app: INestApplication
 
   constructor(app: INestApplication) {
     this.app = app
-  }
-
-  public getConnection() {
-    return this.app.get(getConnectionToken())
   }
 
   public get httpServer() {
@@ -32,12 +26,6 @@ export class BaseTestHelper {
     return {
       confirmedUserAccessToken,
     }
-  }
-
-  public async truncateDatabase() {
-    const connection: Connection = this.getConnection()
-
-    await connection.query(`SELECT truncate_tables('backoffice');`)
   }
 
   public async stopServer() {
