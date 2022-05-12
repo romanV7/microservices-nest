@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common'
 import { StreamsService } from './streams.service'
 import { StreamsController } from './streams.controller'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { StreamEntity } from './streams.entity'
 import {
   BaseHttpConnectorService,
   provideConstantValue,
@@ -10,7 +8,7 @@ import {
 } from '../../providers'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([StreamEntity])],
+  imports: [],
   controllers: [StreamsController],
   providers: [
     StreamsService,

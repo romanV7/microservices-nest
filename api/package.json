@@ -13,12 +13,9 @@
     "start:prod": "NODE_ENV=production node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "NODE_ENV=development jest --runInBand --detectOpenHandles --forceExit",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -f ormconfig",
-    "migration:run": "ts-node node_modules/typeorm/cli.js migration:run -f ormconfig -c migrations",
-    "migration:create": "ts-node node_modules/typeorm/cli.js migration:create -f ormconfig -c migrations -d src/migrations -n",
-    "migration:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig -c migrations",
-    "test-migration:run": "ts-node node_modules/typeorm/cli.js migration:run -f ormconfig -c migrations-test",
-    "test-migration:revert": "ts-node node_modules/typeorm/cli.js migration:revert -f ormconfig -c migrations-test"
+    "migration:latest": "npx knex migrate:latest",
+    "migration:make": "npx knex migrate:make",
+    "migration:down": "npx knex migrate:down"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.0",
@@ -30,7 +27,6 @@
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.4.0",
     "@nestjs/swagger": "^5.2.0",
-    "@nestjs/typeorm": "^8.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/nodemailer": "^6.4.4",
     "@types/passport-jwt": "^3.0.6",
@@ -43,7 +39,9 @@
     "dotenv": "^16.0.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "knex": "^2.0.0",
     "moment": "^2.29.2",
+    "nest-knexjs": "^0.0.10",
     "nodemailer": "^6.7.2",
     "nodemailer-sendgrid": "^1.0.3",
     "passport": "^0.5.2",
@@ -55,9 +53,6 @@
     "rxjs": "^7.5.4",
     "rxjs-compat": "^6.6.7",
     "swagger-ui-express": "^4.3.0",
-    "typeorm": "^0.2.44",
-    "typeorm-fixtures-cli": "^1.11.1",
-    "typeorm-naming-strategies": "^3.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

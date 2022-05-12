@@ -4,16 +4,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
 import { ConfigService } from '@nestjs/config'
+import { Knex } from 'knex'
+import { InjectModel } from 'nest-knexjs'
+
 import {
   createError,
   ErrorTypeEnum,
   messages,
   StreamStatus,
 } from '../../common'
-import { StreamEntity } from './streams.entity'
 import { DigitalOceanStreamProviderService } from '../../providers/digital-ocean-stream-provider.service'
 import { StreamStatusTransitionService } from '../../providers'
 import { ICompleteStream, StreamDto } from './interfaces'
@@ -21,25 +21,27 @@ import { ICompleteStream, StreamDto } from './interfaces'
 @Injectable()
 export class StreamsService {
   constructor(
-    @InjectRepository(StreamEntity)
-    private streamRepository: Repository<StreamEntity>,
+    @InjectModel() private readonly knex: Knex,
     private readonly digitalOceanStreamProviderService: DigitalOceanStreamProviderService,
     private readonly configService: ConfigService,
   ) {}
 
-  create(createStreamDto): Promise<StreamEntity> {
-    return this.streamRepository.save({
+  create(createStreamDto): Promise<StreamDto> {
+    return this.knex.table('streams').insert({
       ...createStreamDto,
       status: StreamStatus.Created,
     })
   }
 
   remove(id: string) {
-    return this.streamRepository.delete({ id })
+    return this.knex
+      .table('users')
+      .where('id', id)
+      .del()
   }
 
   async findOne(id: string): Promise<StreamDto> {
-    const stream = await this.streamRepository.findOne(id)
+    const stream = await this.knex.table('streams').where('id', id)
 
     if (!stream) {
       throw new NotFoundException(
@@ -53,7 +55,7 @@ export class StreamsService {
     return new StreamDto(stream)
   }
 
-  async update(id: string, updateStreamDto): Promise<StreamEntity> {
+  async update(id: string, updateStreamDto): Promise<StreamDto> {
     const property = await this.findOne(id)
 
     if (property.status !== StreamStatus.Created) {
@@ -62,13 +64,13 @@ export class StreamsService {
       )
     }
 
-    return this.streamRepository.save({
+    return this.knex.table('streams').insert({
       ...property,
       ...updateStreamDto,
     })
   }
 
-  async initiate(id: string, userId: string): Promise<StreamEntity> {
+  async initiate(id: string, userId: string): Promise<StreamDto> {
     const stream = await this.findOne(id)
 
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
@@ -102,7 +104,7 @@ export class StreamsService {
   async complete(
     id: string,
     completeStreamDto: ICompleteStream,
-  ): Promise<StreamEntity> {
+  ): Promise<StreamDto> {
     const property = await this.findOne(id)
 
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
@@ -119,7 +121,7 @@ export class StreamsService {
       )
     }
 
-    return this.streamRepository.save({
+    return this.knex.table('streams').insert({
       ...property,
       ...completeStreamDto,
       activationCompletedAt: new Date(),
@@ -127,7 +129,7 @@ export class StreamsService {
     })
   }
 
-  async start(id: string): Promise<StreamEntity> {
+  async start(id: string): Promise<StreamDto> {
     const property = await this.findOne(id)
 
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
@@ -141,14 +143,14 @@ export class StreamsService {
       )
     }
 
-    return this.streamRepository.save({
+    return this.knex.table('streams').insert({
       ...property,
       status: StreamStatus.Started,
       startedAt: new Date(),
     })
   }
 
-  async stop(id: string): Promise<StreamEntity> {
+  async stop(id: string): Promise<StreamDto> {
     const property = await this.findOne(id)
 
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
@@ -162,24 +164,21 @@ export class StreamsService {
       )
     }
 
-    return this.streamRepository.save({
+    return this.knex.table('streams').insert({
       ...property,
       status: StreamStatus.Stopped,
     })
   }
 
-  async getByOptions(params: Partial<StreamEntity>): Promise<StreamEntity> {
-    return this.streamRepository.findOne(params)
+  async getByOptions(params: Partial<StreamDto>): Promise<StreamDto> {
+    return this.knex.table('streams').where('id', params)
   }
 
-  async findAll(): Promise<StreamEntity[]> {
-    return this.streamRepository.find()
+  async findAll(): Promise<StreamDto[]> {
+    return this.knex.table('streams')
   }
 
-  async deactivationInitiate(
-    id: string,
-    userId: string,
-  ): Promise<StreamEntity> {
+  async deactivationInitiate(id: string, userId: string): Promise<StreamDto> {
     const stream = await this.findOne(id)
 
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
@@ -201,14 +200,14 @@ export class StreamsService {
       streamerId: userId,
     })
 
-    return this.streamRepository.save({
+    return this.knex.table('streams').insert({
       ...stream,
       status: StreamStatus.Deactivating,
       deactivationInitiatedAt: new Date(),
     })
   }
 
-  async deactivationComplete(id: string): Promise<StreamEntity> {
+  async deactivationComplete(id: string): Promise<StreamDto> {
     const property = await this.findOne(id)
 
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
@@ -225,7 +224,7 @@ export class StreamsService {
       )
     }
 
-    return this.streamRepository.save({
+    return this.knex.table('streams').insert({
       ...property,
       status: StreamStatus.Deactivated,
       deactivationCompletedAt: new Date(),

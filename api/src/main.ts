@@ -6,7 +6,6 @@ import { AppModule } from './app.module'
 import { setupSwagger } from 'viveo-swagger'
 import { HttpExceptionFilter } from './filters'
 import { errorParser, ResponseErrorTypeEnum } from './common'
-import { useContainer } from 'typeorm'
 import { MicroserviceOptions } from '@nestjs/microservices'
 
 async function bootstrap() {
@@ -40,11 +39,6 @@ async function bootstrap() {
   const port = configService.get<number>('port')
 
   app.useGlobalPipes(validationPipe).useGlobalFilters(httpExceptionFilter)
-
-  useContainer(app.select(AppModule), {
-    fallback: true,
-    fallbackOnErrors: true,
-  })
 
   app.connectMicroservice<MicroserviceOptions>({
     options: {
