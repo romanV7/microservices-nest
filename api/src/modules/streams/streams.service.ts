@@ -70,22 +70,28 @@ export class StreamsService {
     })
   }
 
-  async initiate(id: string, userId: string): Promise<StreamDto> {
-    const stream = await this.findOne(id)
-
+  protected validateStream(
+    status: StreamStatus,
+    expectedStatus: StreamStatus,
+    error,
+  ): void {
     const canUpdateStatus = StreamStatusTransitionService.validateTransition(
-      stream.status,
-      StreamStatus.Activating,
+      status,
+      expectedStatus,
     )
 
     if (!canUpdateStatus) {
-      throw new ConflictException(
-        createError(
-          ErrorTypeEnum.INITIATE_STREAM,
-          messages.errors.initiateStream,
-        ),
-      )
+      throw new ConflictException(createError(error.key, error.value))
     }
+  }
+
+  async initiate(id: string, userId: string): Promise<StreamDto> {
+    const stream = await this.findOne(id)
+
+    this.validateStream(stream.status, StreamStatus.Activating, {
+      key: ErrorTypeEnum.INITIATE_STREAM,
+      value: messages.errors.initiateStream,
+    })
 
     await this.digitalOceanStreamProviderService.create({
       streamId: stream.id,
@@ -107,19 +113,10 @@ export class StreamsService {
   ): Promise<StreamDto> {
     const property = await this.findOne(id)
 
-    const canUpdateStatus = StreamStatusTransitionService.validateTransition(
-      property.status,
-      StreamStatus.Activated,
-    )
-
-    if (!canUpdateStatus) {
-      throw new ConflictException(
-        createError(
-          ErrorTypeEnum.COMPLETE_STREAM,
-          messages.errors.completeStream,
-        ),
-      )
-    }
+    this.validateStream(property.status, StreamStatus.Activated, {
+      key: ErrorTypeEnum.COMPLETE_STREAM,
+      value: messages.errors.completeStream,
+    })
 
     return this.knex.table('streams').insert({
       ...property,
@@ -132,16 +129,10 @@ export class StreamsService {
   async start(id: string): Promise<StreamDto> {
     const property = await this.findOne(id)
 
-    const canUpdateStatus = StreamStatusTransitionService.validateTransition(
-      property.status,
-      StreamStatus.Started,
-    )
-
-    if (!canUpdateStatus) {
-      throw new ConflictException(
-        createError(ErrorTypeEnum.START_STREAM, messages.errors.startStream),
-      )
-    }
+    this.validateStream(property.status, StreamStatus.Started, {
+      key: ErrorTypeEnum.START_STREAM,
+      value: messages.errors.startStream,
+    })
 
     return this.knex.table('streams').insert({
       ...property,
@@ -153,16 +144,10 @@ export class StreamsService {
   async stop(id: string): Promise<StreamDto> {
     const property = await this.findOne(id)
 
-    const canUpdateStatus = StreamStatusTransitionService.validateTransition(
-      property.status,
-      StreamStatus.Stopped,
-    )
-
-    if (!canUpdateStatus) {
-      throw new ConflictException(
-        createError(ErrorTypeEnum.STOP_STREAM, messages.errors.stopStream),
-      )
-    }
+    this.validateStream(property.status, StreamStatus.Stopped, {
+      key: ErrorTypeEnum.STOP_STREAM,
+      value: messages.errors.stopStream,
+    })
 
     return this.knex.table('streams').insert({
       ...property,
@@ -181,19 +166,10 @@ export class StreamsService {
   async deactivationInitiate(id: string, userId: string): Promise<StreamDto> {
     const stream = await this.findOne(id)
 
-    const canUpdateStatus = StreamStatusTransitionService.validateTransition(
-      stream.status,
-      StreamStatus.Deactivating,
-    )
-
-    if (!canUpdateStatus) {
-      throw new ConflictException(
-        createError(
-          ErrorTypeEnum.DEACTIVATING_STREAM,
-          messages.errors.deactivatingStream,
-        ),
-      )
-    }
+    this.validateStream(stream.status, StreamStatus.Deactivating, {
+      key: ErrorTypeEnum.DEACTIVATING_STREAM,
+      value: messages.errors.deactivatingStream,
+    })
 
     await this.digitalOceanStreamProviderService.delete({
       streamId: stream.id,
@@ -210,19 +186,10 @@ export class StreamsService {
   async deactivationComplete(id: string): Promise<StreamDto> {
     const property = await this.findOne(id)
 
-    const canUpdateStatus = StreamStatusTransitionService.validateTransition(
-      property.status,
-      StreamStatus.Deactivated,
-    )
-
-    if (!canUpdateStatus) {
-      throw new ConflictException(
-        createError(
-          ErrorTypeEnum.DEACTIVATE_COMPELTE_STREAM,
-          messages.errors.deactivateCompleteStream,
-        ),
-      )
-    }
+    this.validateStream(property.status, StreamStatus.Deactivated, {
+      key: ErrorTypeEnum.DEACTIVATE_COMPELTE_STREAM,
+      value: messages.errors.deactivateCompleteStream,
+    })
 
     return this.knex.table('streams').insert({
       ...property,
