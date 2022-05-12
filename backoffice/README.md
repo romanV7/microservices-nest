@@ -1,5 +1,8 @@
 # Backoffice API
 
+## General Description
+The server that handles requests, domain modeling located here also implemented part of the business logic of the selected subject area, namely streaming service
+
 ## Deployment
 
 ### Requirements

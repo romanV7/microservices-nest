@@ -1,5 +1,8 @@
 # Streaming API
 
+## General Description
+The server that consumes tcp requests from backoffice server
+
 ## Deployment
 
 ### Requirements
