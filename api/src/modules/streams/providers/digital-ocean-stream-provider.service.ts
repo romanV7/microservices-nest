@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common'
-import {
-  ICreateStreamParams,
-  IDeleteStreamParams,
-  StreamProviderUrls,
-} from '../common'
+import { StreamProviderUrls } from '../constants'
+import { ICreateStreamParams, IDeleteStreamParams } from '../interfaces'
 import { AbstractStreamProviderService } from './abstract-stream-provider.service'
 
 @Injectable()

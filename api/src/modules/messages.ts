@@ -1,4 +1,4 @@
-import { StreamStatus } from './constants'
+import { StreamStatus } from './streams/constants'
 
 export const messages = {
   errors: {

@@ -8,15 +8,12 @@ import { ConfigService } from '@nestjs/config'
 import { Knex } from 'knex'
 import { InjectModel } from 'nest-knexjs'
 
-import {
-  createError,
-  ErrorTypeEnum,
-  messages,
-  StreamStatus,
-} from '../../common'
-import { DigitalOceanStreamProviderService } from '../../providers/digital-ocean-stream-provider.service'
-import { StreamStatusTransitionService } from '../../providers'
+import { DigitalOceanStreamProviderService } from './providers/digital-ocean-stream-provider.service'
 import { ICompleteStream, StreamDto } from './interfaces'
+import { StreamStatus, ErrorTypeEnum } from './constants'
+import { messages } from 'modules/messages'
+import { createError } from 'common'
+import { StreamStatusTransitionService } from './providers'
 
 @Injectable()
 export class StreamsService {
