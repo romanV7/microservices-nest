@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { DatabaseModule } from './database.module'
 import { UsersModule } from './modules/users/users.module'
-import { configuration } from './config/configuration'
+import { configuration } from '../config/configuration'
 import { AuthenticationModule } from './modules/authentication/authentication.module'
 import { StreamsModule } from './modules/streams/streams.module'
 

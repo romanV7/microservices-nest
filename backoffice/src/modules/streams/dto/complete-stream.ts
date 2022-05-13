@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator'
-import { StreamInboundUrl, StreamOutboundUrl } from '../../../decorators'
+import { StreamInboundUrl, StreamOutboundUrl } from '../decorators'
 
 export class CompleteStreamDto {
   @IsString()

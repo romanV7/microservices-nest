@@ -4,7 +4,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator'
 import { Injectable } from '@nestjs/common'
-import { messages } from '../common'
+import { messages } from '../../../common'
 
 @ValidatorConstraint({ name: 'StreamTitle', async: true })
 @Injectable()

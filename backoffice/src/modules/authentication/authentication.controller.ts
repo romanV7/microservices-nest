@@ -24,7 +24,7 @@ import {
   getTokenFromAuthHeader,
 } from '../../common'
 import { JwtAuthenticationGuard } from './guard'
-import { User } from '../../decorators'
+import { User } from '../streams/decorators'
 import { UserEntity } from '../users/user.entity'
 import { UserDto } from '../users/dto'
 import {

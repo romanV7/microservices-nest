@@ -1,4 +1,4 @@
-import { StreamStatus } from '../constants'
+import { StreamStatus } from '../../users/constants'
 
 export interface IStreamStatusMap {
   [propName: string]: StreamStatus[]

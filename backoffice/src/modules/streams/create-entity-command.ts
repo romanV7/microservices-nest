@@ -1,5 +1,5 @@
-import { EEntityNames } from './constants/entity-names'
-import { EntityOperation } from './constants/entity-operation'
+import { EEntityNames } from './constraints/entity-names'
+import { EntityOperation } from './constraints/entity-operation'
 
 export function createEntityCommand(
   entityName: EEntityNames,

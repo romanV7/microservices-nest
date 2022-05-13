@@ -1,5 +1,5 @@
 import { ValidationError } from '@nestjs/common'
-import { ErrorTypeEnum } from '../constants'
+import { ErrorTypeEnum } from '../../modules/users/constants'
 
 interface CreateError {
   readonly message: ErrorTypeEnum

@@ -6,7 +6,7 @@ import {
   StreamInboundUrl,
   StreamOutboundUrl,
   StreamTitle,
-} from '../../../decorators'
+} from '../decorators'
 
 export class UpdateStreamDto {
   @IsString()

@@ -13,12 +13,12 @@ import {
   TokenBlackListGuard,
 } from '../../authentication/guard'
 import { UsersService } from '../users.service'
-import { User } from '../../../decorators'
+import { User } from '../../streams/decorators'
 import { UserEntity } from '../user.entity'
 import { UserDto } from '../dto'
 import { ChangePasswordDto } from '../dto/change-password.dto'
-import { messages, SuccessResponse } from '../../../common'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { messages } from 'modules/authentication/messages'
 
 @Controller()
 @ApiTags('users')
@@ -40,7 +40,7 @@ export class UsersController {
   async changePassword(
     @User() user: UserEntity,
     @Body() changePasswordData: ChangePasswordDto,
-  ): Promise<SuccessResponse> {
+  ): Promise<any> {
     await this.usersService.changePassword(user.id, changePasswordData)
     return { message: messages.user.changePassword }
   }
